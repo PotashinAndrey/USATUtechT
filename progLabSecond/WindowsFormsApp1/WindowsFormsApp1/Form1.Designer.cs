@@ -44,6 +44,7 @@
             this.добавитьToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.отчиститьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.сдвинутьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -88,14 +89,14 @@
             // добавитьToolStripMenuItem
             // 
             this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
-            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.добавитьToolStripMenuItem.Text = "Добавить";
             this.добавитьToolStripMenuItem.Click += new System.EventHandler(this.ДобавитьToolStripMenuItem_Click);
             // 
             // очиститьToolStripMenuItem
             // 
             this.очиститьToolStripMenuItem.Name = "очиститьToolStripMenuItem";
-            this.очиститьToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.очиститьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.очиститьToolStripMenuItem.Text = "Очистить";
             this.очиститьToolStripMenuItem.Click += new System.EventHandler(this.ОчиститьToolStripMenuItem_Click);
             // 
@@ -149,21 +150,22 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.добавитьToolStripMenuItem1,
-            this.отчиститьToolStripMenuItem});
+            this.отчиститьToolStripMenuItem,
+            this.сдвинутьToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(127, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
             // 
             // добавитьToolStripMenuItem1
             // 
             this.добавитьToolStripMenuItem1.Name = "добавитьToolStripMenuItem1";
-            this.добавитьToolStripMenuItem1.Size = new System.Drawing.Size(126, 22);
+            this.добавитьToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.добавитьToolStripMenuItem1.Text = "Добавить";
             this.добавитьToolStripMenuItem1.Click += new System.EventHandler(this.ДобавитьToolStripMenuItem1_Click);
             // 
             // отчиститьToolStripMenuItem
             // 
             this.отчиститьToolStripMenuItem.Name = "отчиститьToolStripMenuItem";
-            this.отчиститьToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.отчиститьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.отчиститьToolStripMenuItem.Text = "Очистить";
             this.отчиститьToolStripMenuItem.Click += new System.EventHandler(this.ОтчиститьToolStripMenuItem_Click);
             // 
@@ -178,6 +180,13 @@
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Panel1_Paint);
             this.panel1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Panel1_MouseDoubleClick);
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Panel1_MouseDown);
+            // 
+            // сдвинутьToolStripMenuItem
+            // 
+            this.сдвинутьToolStripMenuItem.Name = "сдвинутьToolStripMenuItem";
+            this.сдвинутьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.сдвинутьToolStripMenuItem.Text = "Сдвинуть";
+            this.сдвинутьToolStripMenuItem.Click += new System.EventHandler(this.СдвинутьToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -219,6 +228,7 @@
         private System.Windows.Forms.ToolStripMenuItem добавитьToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem отчиститьToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripMenuItem сдвинутьToolStripMenuItem;
     }
 }
 

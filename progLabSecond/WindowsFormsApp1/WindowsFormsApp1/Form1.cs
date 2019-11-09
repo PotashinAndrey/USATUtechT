@@ -49,7 +49,7 @@ namespace WindowsFormsApp1
 
         private void ToolStripButton3_Click(object sender, EventArgs e)
         {
-            ClearFigures();
+            ClearFigures(true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -69,7 +69,7 @@ namespace WindowsFormsApp1
 
         private void ОчиститьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClearFigures();
+            ClearFigures(true);
         }
 
         private void ДобавитьToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -93,9 +93,22 @@ namespace WindowsFormsApp1
             panel1.Invalidate();
         }
 
-        public void ClearFigures()
+        public void ClearFigures(bool all = false)
         {
-        
+            if (all)
+            {
+                elements.RemoveAll(item => item.w > 0);
+                panel1.Invalidate();
+                return;
+            }
+
+            foreach (GraphObject elem in elements)
+            {
+                if (elem.Selected) { elem.Deleted = true; }
+            }
+
+            elements.RemoveAll(e => e.Deleted);
+                panel1.Invalidate();
         }
 
         private void Panel1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -133,6 +146,23 @@ namespace WindowsFormsApp1
             if (temp == null) return;
             temp.Selected = true;
             panel1.Invalidate();
+        }
+
+        private void СдвинутьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (GraphObject elem in elements)
+            {
+                if (elem.Selected == true)
+                {
+                    elem.X = rnd.Next(750);
+                    elem.Y = rnd.Next(320);
+                    panel1.Invalidate();
+
+                }
+
+                elem.Selected = false;
+
+            }
         }
     }
 }

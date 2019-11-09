@@ -37,6 +37,8 @@ namespace System.Drawing
             }
         }
 
+        
+
 
 
         public GraphObject()
@@ -50,6 +52,7 @@ namespace System.Drawing
         }
 
         public bool Selected { get; set; } 
+        public bool Deleted { get; set; }
 
         static Random r = new Random();
 

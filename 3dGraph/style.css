@@ -7,7 +7,9 @@
 body {
     display: grid;
     grid-template-columns: 1fr 1024px 1fr;
-    grid-template-areas:". canvas .";
+    grid-template-rows: 5fr 1fr;
+    grid-template-areas:". canvas ."
+                        ". panel .";
 
     height: 100vh;
     align-items: center;
@@ -16,6 +18,27 @@ body {
 
 .canvasDiv {
     grid-area: canvas;
+}
+
+.panel {
+    grid-area: panel;
+    align-self: start;
+}
+
+button {
+    padding: 15px;
+    border: 1px solid #aaaaaa;
+}
+
+input {
+    background-color: #eeeeee;
+    padding: 15px;
+}
+
+#open {
+    text-decoration: none;
+    outline:0;
+    user-select:none;
 }
 
 canvas {

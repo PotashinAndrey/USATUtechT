@@ -12,6 +12,14 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
+        static Random rnd = new Random();
+
+        static GraphObject rand()
+        {
+            if (rnd.Next(10) >= 5) return new Rectangle();
+            return new Ellipse();
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -81,7 +89,7 @@ namespace WindowsFormsApp1
 
         public void AddFigure()
         {
-            elements.Add(new GraphObject());
+            elements.Add(rand());
             panel1.Invalidate();
         }
 
@@ -92,12 +100,12 @@ namespace WindowsFormsApp1
 
         private void Panel1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            GraphObject temp = new GraphObject();
+            GraphObject temp = rand();
             temp.X = e.X;
             temp.Y = e.Y;
             elements.Add(temp);
             panel1.Refresh();
-
+            
         }
 
         private void Panel1_Paint(object sender, PaintEventArgs e)

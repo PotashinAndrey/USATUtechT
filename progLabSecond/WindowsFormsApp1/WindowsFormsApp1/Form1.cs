@@ -152,6 +152,19 @@ namespace WindowsFormsApp1
         private void Panel1_MouseDown(object sender, MouseEventArgs e)
         {
             GraphObject temp = null;
+            if (Form.ModifierKeys == Keys.Control)
+            {
+                foreach (GraphObject elem in elements)
+                {
+                    if (elem.ContainsPoint(e.Location))
+                    {
+                        elem.Selected = true;
+                        panel1.Invalidate();
+
+                    }
+                }
+                return;
+            }
             panel1.Invalidate();
             foreach (GraphObject elem in elements)
             {
@@ -159,9 +172,7 @@ namespace WindowsFormsApp1
                 {
                     temp = elem;
                 }
-
                 elem.Selected = false;
-
             }
             if (temp == null) return;
             temp.Selected = true;
@@ -186,6 +197,11 @@ namespace WindowsFormsApp1
         }
 
         private void RadioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Panel1_Click(object sender, EventArgs e)
         {
 
         }

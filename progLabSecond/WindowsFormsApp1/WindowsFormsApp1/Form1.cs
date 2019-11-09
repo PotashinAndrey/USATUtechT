@@ -13,6 +13,8 @@ namespace WindowsFormsApp1
     public partial class Form1 : Form
     {
         static Random rnd = new Random();
+        RandomObjectFactory rof = new RandomObjectFactory();
+        TwoTypeFactory ttf = new TwoTypeFactory();
 
         static GraphObject rand()
         {
@@ -44,7 +46,8 @@ namespace WindowsFormsApp1
 
         private void ToolStripButton2_Click(object sender, EventArgs e)
         {
-            AddFigure();
+            selectiveAdd();
+            //AddFigure();
         }
 
         private void ToolStripButton3_Click(object sender, EventArgs e)
@@ -64,7 +67,7 @@ namespace WindowsFormsApp1
 
         private void ДобавитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddFigure();
+            selectiveAdd();
         }
 
         private void ОчиститьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -74,7 +77,9 @@ namespace WindowsFormsApp1
 
         private void ДобавитьToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AddFigure();
+            selectiveAdd();
+
+            //AddFigure();
         }
 
         private void ОтчиститьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -90,6 +95,22 @@ namespace WindowsFormsApp1
         public void AddFigure()
         {
             elements.Add(rand());
+            panel1.Invalidate();
+        }
+
+        public void selectiveAdd()
+        {
+            IGraphicFactory igf;
+            if (radioButton1.Checked)
+            {
+                igf = rof;
+            }
+            else
+            {
+                igf = ttf;
+            }
+
+            elements.Add(igf.CreateGraphObject());
             panel1.Invalidate();
         }
 
@@ -118,7 +139,6 @@ namespace WindowsFormsApp1
             temp.Y = e.Y;
             elements.Add(temp);
             panel1.Refresh();
-            
         }
 
         private void Panel1_Paint(object sender, PaintEventArgs e)
@@ -163,6 +183,11 @@ namespace WindowsFormsApp1
                 elem.Selected = false;
 
             }
+        }
+
+        private void RadioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

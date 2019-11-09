@@ -17,6 +17,17 @@ namespace System.Drawing
             int w = 50;
             int h = 50;
             SolidBrush brush;
+            int X
+            {   get { return x; }
+                set {
+                if (value < 0) { throw new ArgumentException("x<0!"); }
+                x = value;}}
+
+            int Y
+            {   get { return y; }
+                set {
+                if (value < 0) { throw new ArgumentException("y<0!"); }
+                y = value; }}
 
         static Random r = new Random();
 

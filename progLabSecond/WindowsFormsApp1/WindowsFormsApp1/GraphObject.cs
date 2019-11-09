@@ -17,7 +17,8 @@ namespace System.Drawing
             int w = 50;
             int h = 50;
             SolidBrush brush;
-            public int X
+        public bool Selected { get; set; } 
+        public int X
             {   get { return x; }
                 set {
                 if (value < 0) { throw new ArgumentException("x<0!"); }
@@ -41,13 +42,22 @@ namespace System.Drawing
             brush = new SolidBrush(c);
         }
 
-
+        public bool ContainsPoint(Point p)
+        {
+            if (p.X <= x + w && p.X >= x && p.Y <= y + h && p.Y >= y) return true;
+            return false;
+        }
 
 
         public void Draw(Graphics g)
         {
             g.FillRectangle(brush, x, y, w, h);
             g.DrawRectangle(Pens.Black, x, y, w, h);
+            if (Selected) {
+                g.DrawRectangle(Pens.Red, x, y, w, h);
+            } else {
+                g.DrawRectangle(Pens.Black, x, y, w, h);
+            }
         }
     }
 }

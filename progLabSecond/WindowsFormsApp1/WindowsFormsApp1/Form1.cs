@@ -108,6 +108,23 @@ namespace WindowsFormsApp1
             }
         }
 
+        private void Panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            GraphObject temp = null;
+            panel1.Invalidate();
+            foreach (GraphObject elem in elements)
+            {
+                if (elem.ContainsPoint(e.Location))
+                {
+                    temp = elem;
+                }
 
+                elem.Selected = false;
+
+            }
+            if (temp == null) return;
+            temp.Selected = true;
+            panel1.Invalidate();
+        }
     }
 }

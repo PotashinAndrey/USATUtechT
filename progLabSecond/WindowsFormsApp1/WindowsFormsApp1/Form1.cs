@@ -90,6 +90,16 @@ namespace WindowsFormsApp1
         
         }
 
+        private void Panel1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            GraphObject temp = new GraphObject();
+            temp.X = e.X;
+            temp.Y = e.Y;
+            elements.Add(temp);
+            panel1.Refresh();
+
+        }
+
         private void Panel1_Paint(object sender, PaintEventArgs e)
         {
             foreach (GraphObject elem in elements)
@@ -97,5 +107,7 @@ namespace WindowsFormsApp1
                 elem.Draw(e.Graphics);
             }
         }
+
+
     }
 }

@@ -17,13 +17,13 @@ namespace System.Drawing
             int w = 50;
             int h = 50;
             SolidBrush brush;
-            int X
+            public int X
             {   get { return x; }
                 set {
                 if (value < 0) { throw new ArgumentException("x<0!"); }
                 x = value;}}
 
-            int Y
+            public int Y
             {   get { return y; }
                 set {
                 if (value < 0) { throw new ArgumentException("y<0!"); }
@@ -34,8 +34,8 @@ namespace System.Drawing
         public GraphObject()
         {
             c = cols[r.Next(cols.Length)];
-            x = r.Next(200);
-            y = r.Next(200);
+            x = r.Next(750);
+            y = r.Next(320);
             w = 50;
             h = 50;
             brush = new SolidBrush(c);

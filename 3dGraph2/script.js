@@ -29,7 +29,7 @@ function Draw() {
   drawCells(w, h, 75);
   drawCoordinateAxes(w, h);
 
-  const scale = {x: 30, y: 10};
+  const scale = {x: 10, y: 10};
   ctx.scale(scale.x, scale.y);
   ctx.lineWidth = 1/10;
 

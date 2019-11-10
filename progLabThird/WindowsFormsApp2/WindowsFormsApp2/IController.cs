@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp2
 {
-    interface IController
+    public interface IController
     {
         IModel Model { get; set; }
         void AddView(IView v);

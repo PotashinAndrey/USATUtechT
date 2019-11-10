@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp2
 {
-    interface IView
+    public interface IView
     {
         IModel Model { get; set; }
         void UpdateView();

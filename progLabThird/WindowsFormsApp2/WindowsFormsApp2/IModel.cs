@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp2
 {
-    interface IModel
+    public interface IModel
     {
         void AddNode(int value);
         void RemoveLastNode();

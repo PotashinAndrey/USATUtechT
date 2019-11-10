@@ -21,5 +21,6 @@ namespace WindowsFormsApp2
         {
             nodes.RemoveLast();
         }
+
     }
 }

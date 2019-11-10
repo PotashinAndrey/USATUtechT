@@ -23,6 +23,7 @@ namespace WindowsFormsApp2
 
         }
 
+        
     }
 
     public class Controller : IController
@@ -45,8 +46,10 @@ namespace WindowsFormsApp2
 
         public void Remove()
         {
+            
             model.RemoveLastNode();
         }
+
     }
 }
 

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "javascript-canvas/*":  ["./node_modules/javascript-canvas/*"],
+      "javascript-algebra/*": ["./node_modules/javascript-algebra/*"],
+      "javascript-std-lib/*": ["./node_modules/javascript-std-lib/*"],
+    }
+  }
+}

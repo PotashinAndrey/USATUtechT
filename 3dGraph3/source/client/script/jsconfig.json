@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../../node_modules/",
+    "paths": {
+      "/javascript-fetch-api/*": ["./javascript-fetch-api/*"],
+      "/javascript-std-lib/*":   ["./javascript-std-lib/*"]
+    }
+  }
+}

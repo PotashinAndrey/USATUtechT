@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../../../node_modules/",
+    "paths": {
+      "/javascript-fetch-api/*": ["./javascript-fetch-api/*"],
+      "/javascript-std-lib/*":   ["./javascript-std-lib/*"],
+      "/javascript-canvas/*":   ["./javascript-canvas/*"],
+      "/javascript-algebra/*":   ["./javascript-algebra/*"]
+    }
+  }
+}

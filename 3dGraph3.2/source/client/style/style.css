@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+material-fab {
+  position: fixed;
+  bottom: 2em;
+  right: 2em;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr 1024 1fr;
+  grid-template-rows: 766 1fr;
+  grid-template-areas:'. canv .'
+                      '. cont .';
+  justify-content: center;
+  align-content: start;
+}
+
+canvas {
+  grid-area: canv;
+}
+
+.container {
+  grid-area: cont;
+  justify-self: center;
+}
+
+button {
+  padding: 20px;
+}

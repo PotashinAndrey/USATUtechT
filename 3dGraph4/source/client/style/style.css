@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr 1024px 1fr;
+  grid-template-rows: 5fr 1fr;
+  grid-template-areas:". canvas ."
+                      ". panel .";
+
+  height: 100vh;
+  align-items: center;
+  justify-items: center;
+}
+
+.canvasDiv {
+  grid-area: canvas;
+}
+
+.panel {
+  grid-area: panel;
+  align-self: start;
+}
+
+button {
+  padding: 15px;
+  border: 1px solid #aaaaaa;
+}
+
+canvas {
+  height: 766px;
+  width: 1024px;
+  background-color: #eeeeee;
+}

@@ -1,24 +1,15 @@
+import {$} from './script.js';
 import {Vector, Matrix} from '/javascript-algebra/index.js';
 
-// const oneStep = 2 * Math.PI / (180 / Math.PI) +;
-
 const oneStep = Math.PI / 32;
-let flagx = false, flagy = true, flagz = false;
-let flagP = true, flagL = true, flagE = false;
+let flagx = false, flagy = true, flagz = false, flagP = true, flagL = true, flagE = false;
 
 const points = [[0,1.5,0],[1,1.5,0],[1,1.3,0],[0.6,1.1,0],[0.7,1,0],[0.7,0.9,0],[0.6,0.8,0],[0.4,-1,0],[0.6, -1.1,0],[0.6, -1.2,0],[0.55, -1.3,0],[0.6, -1.4,0],[0.6, -1.5,0],[0.5, -1.7,0],[0.4, -1.8,0],[0.2, -1.9,0],[0, -2,0],[0,1.5,0]];
 const vectors = [];
 
-document.getElementById('x').addEventListener('click', () => {
-  flagx = !flagx
-});
-document.getElementById('y').addEventListener('click', () => {
-  flagy = !flagy
-});
-document.getElementById('z').addEventListener('click', () => {
-  flagz = !flagz
-});
-
+$('#x').addEventListener('click', () => flagx = !flagx);
+$('#y').addEventListener('click', () => flagy = !flagy);
+$('#z').addEventListener('click', () => flagz = !flagz);
 
 draw(vectors);
 /** */
@@ -43,7 +34,6 @@ function calculateDeformation(points, deformation) {
   return vectorMatrixes.map(e => [...e.multiply(matrix).row(0).data.slice(0, 3)]);
 }
 
-
 /** */
   export default async function main(canvas, width, height) {
     const gl         = canvas.getContext('webgl');
@@ -52,11 +42,11 @@ function calculateDeformation(points, deformation) {
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
     let flag = false;
-    canvas.addEventListener('mouseover', () => {
-      flag = true;
-      requestAnimationFrame(render);
-    });
-    canvas.addEventListener('mouseout', () => flag = false);
+      canvas.addEventListener('mouseover', () => {
+        flag = true;
+        requestAnimationFrame(render);
+      });
+      canvas.addEventListener('mouseout', () => flag = false);
     canvas.addEventListener('click', () => negative *= -1);
 
     const vsSource = await fetch('/static/shader/cube.vert.glsl').then(r => r.text());
@@ -67,11 +57,14 @@ function calculateDeformation(points, deformation) {
       program,
       attribute: {
         vertexPosition: gl.getAttribLocation(program, 'aVertexPosition'),
+        vertexNormal: gl.getAttribLocation(program, 'aVertexNormal'),
         vertexColor: gl.getAttribLocation(program, 'aVertexColor')
       },
       uniform: {
         projectionMatrix: gl.getUniformLocation(program, 'uProjectionMatrix'),
-        modelViewMatrix: gl.getUniformLocation(program, 'uModelViewMatrix')
+        modelViewMatrix: gl.getUniformLocation(program, 'uModelViewMatrix'),
+        normalMatrix: gl.getUniformLocation(program, 'uModelNormalMatrix'),
+        lightPosition: gl.getUniformLocation(program, 'uLightPosition')
       }
     };
 
@@ -80,140 +73,123 @@ function calculateDeformation(points, deformation) {
     let cubeRotation = 0;
     let negative = 1;
     let speed = 0.0001;
-    drawScene(gl, programInfo, buffers, cubeRotation);
+    // drawScene(gl, programInfo, buffers, cubeRotation);
 
-    const range = document.getElementById('input');
+    const light = Vector.from(0, 0, 0);
+
+    flag = true;
+    render();
+
+    const range = $('#input');
     range.addEventListener('change', () => speed = Number(range.value));
 
     /** */
-      function render(now) {
+      function render(now = 0) {
         if (flag) {
-          setTimeout(() => {
-            cubeRotation += negative* speed*10;
-            drawScene(gl, programInfo, buffers, cubeRotation);
+          // setTimeout(() => {
+            cubeRotation += negative * speed * 10;
+            drawScene(gl, programInfo, buffers, cubeRotation, light);
             requestAnimationFrame(render);
-          } ,30);
+          // }, 1000 / 20)
         }
       }
 
-    document.getElementById('point').addEventListener('click', () => {
+    $('#point').addEventListener('click', () => {
       flagP = !flagP
       if (!flagP && !flagE && !flagL ) flagL = !flagL;
-      drawScene(gl, programInfo, buffers, cubeRotation);
+      // drawScene(gl, programInfo, buffers, cubeRotation);
+      render();
     });
-    document.getElementById('line').addEventListener('click', () => {
+    $('#line').addEventListener('click', () => {
       flagL = !flagL
       if (!flagP && !flagE && !flagL ) flagL = !flagL;
-      drawScene(gl, programInfo, buffers, cubeRotation);
+      // drawScene(gl, programInfo, buffers, cubeRotation);
+      render();
     });
-    document.getElementById('edge').addEventListener('click', () => {
+    $('#edge').addEventListener('click', () => {
       flagE = !flagE
       if (!flagP && !flagE && !flagL ) flagL = !flagL;
-      drawScene(gl, programInfo, buffers, cubeRotation);
+      // drawScene(gl, programInfo, buffers, cubeRotation);
+      render();
     });
+
+    $('#light-x').addEventListener('input', e => light.x = Number(e.target.value) - 3)
+    $('#light-y').addEventListener('input', e => light.y = Number(e.target.value) - 3)
+    $('#light-z').addEventListener('input', e => light.z = Number(e.target.value) - 3)
   }
 
 /** */
-  async function initBuffers(gl) {
+  function initBuffers(gl) {
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-    console.log(vectors.flat(1).length);
-    const positions = vectors.flat(2);
-    // const positions = await fetch('/model/cube.points.jsonc')
-    //   .then(r => r.text())
-    //   .then(t => t.split(/\n/).filter(s => !s.trim().startsWith('//')).join(''))
-    //   .then(JSON.parse);
-
+    const points = vectors.flat(1);//!
+    const positions = points.flat(1);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-    const faceColors = [
-      [1.0,  1.0,  1.0,  1.0], // Front face: white
-      [1.0,  0.0,  0.0,  1.0], // Back face: red
-      [0.0,  1.0,  0.0,  1.0], // Top face: green
-      [0.0,  0.0,  1.0,  1.0], // Bottom face: blue
-      [1.0,  1.0,  0.0,  1.0], // Right face: yellow
-      [1.0,  0.0,  1.0,  1.0]  // Left face: purple
-    ];
-
-    // Convert the array of colors into a table for all the vertices.
-
-    // let colors = [];
-    // for (let j = 0; j < faceColors.length; ++j) {
-    //   const c = faceColors[j];
-    //   colors = colors.concat(c, c, c, c); // Repeat each color four times for the four vertices of the face
-    // }
     const colors = Array.from({length: 65 * 18}, (_, i) => [i / 65 / 18, 0.0, 1.0 - i / 65 / 18, 1.0]).flat();
-    console.log(colors);
 
     const colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
 
-    // Build the element array buffer; this specifies the indices into the vertex arrays for each face's vertices.
+    const normalsBuffer = gl.createBuffer(); //!
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer);//!
+
     const indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-    // This array defines each face as two triangles, using the indices into the vertex array to specify each triangle's position.
-    // const indices = [
-    //   0,  1,  2,      0,  2,  3,    // front
-    //   4,  5,  6,      4,  6,  7,    // back
-    //   8,  9,  10,     8,  10, 11,   // top
-    //   12, 13, 14,     12, 14, 15,   // bottom
-    //   16, 17, 18,     16, 18, 19,   // right
-    //   20, 21, 22,     20, 22, 23    // left
-    // ];
+    const normals = [];//!
     const indices = [];
-    for (let i = 0; i < 64 * 18 - 1; ++i) { // 6840, 76*18*5, 6911
+    for (let i = 0; i < 64 * 18 - 1; ++i) {
+      let A, B, C, normal;
       indices.push(i);
       indices.push(i+1);
       indices.push(i+18);
+      A = new Vector(points[i]);//!
+      B = new Vector(points[i + 1]);//!
+      C = new Vector(points[i + 18]);//!
+      normal = Vector.normal(A, B, C).data.slice(0, 3);//!
+      normals.push(normal, normal, normal);//!
+
       indices.push(i+18);
       indices.push(i+19);
       indices.push(i+1);
-      // indices.push(i + 1, i, i + 18);
-      // indices.push(i + 1, i + 18, i + 18);
+      A = new Vector(points[i + 18]);//!
+      B = new Vector(points[i + 19]);//!
+      C = new Vector(points[i + 1]);//!
+      normal = Vector.normal(A, B, C).data.slice(0, 3);//!
+      normals.push(normal, normal, normal);//!
     }
 
-    // Now send the element array to GL
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+    const normales = normals.flat();//!
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normales), gl.STATIC_DRAW);//!
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);//!
 
     return {
       position: {buffer: positionBuffer, length: positions.length},
+      normals: {buffer: normalsBuffer, length: normales.length}, // !
       color: {buffer: colorBuffer, length: colors.length},
       indices: {buffer: indexBuffer, length: indices.length}
     };
   }
 
 /** */
-  function drawScene(gl, programInfo, buffers, cubeRotation) {
-    gl.clearColor(0.9, 0.9, 0.9, 1.0);  // Clear to black, fully opaque
-    gl.clearDepth(1.0);                 // Clear everything
-    gl.enable(gl.DEPTH_TEST);           // Enable depth testing
-    gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+  function drawScene(gl, programInfo, buffers, cubeRotation, light) {
+    gl.clearColor(0.9, 0.9, 0.9, 1.0);
+    gl.clearDepth(1.0);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
 
     // eslint-disable-next-line no-bitwise
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // Clear the canvas before we start drawing on it.
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Create a perspective matrix, a special matrix that is
-    // used to simulate the distortion of perspective in a camera.
-    // Our field of view is 45 degrees, with a width/height
-    // ratio that matches the display size of the canvas
-    // and we only want to see objects between 0.1 units
-    // and 100 units away from the camera.
-
-    const fieldOfView = 45; // * Math.PI / 180;   // not in radians
+    const fieldOfView = 45;
     const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     const zNear = 0.1;
     const zFar = 100.0;
     const projectionMatrix = Matrix.perspective(fieldOfView, aspect, zNear, zFar).rotateX(0.5);
-    // const projectionMatrix = Matrix.lookAt(Vector.from(0, 0, 0), Vector.ZERO, Vector.Y)
 
-    // Set the drawing position to the "identity" point, which is the center of the scene.
     let modelViewMatrix = Matrix.identity(4);
-
-    // Now move the drawing position a bit to where we want to start drawing the square.
-    // let rotation = cubeRotation; // * Math.PI / 180;
 
     modelViewMatrix = modelViewMatrix
       .scaleY(-1)
@@ -221,6 +197,8 @@ function calculateDeformation(points, deformation) {
       .rotateY(flagy ? cubeRotation : 0) // amount to rotate not in radians
       .rotateX(flagx ? cubeRotation : 0)
       .rotateZ(flagz ? cubeRotation : 0);
+
+    const normalMatrix = modelViewMatrix.inverse3D().transpose()
 
     { // Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute
       const numComponents = 3;
@@ -231,6 +209,17 @@ function calculateDeformation(points, deformation) {
       gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position.buffer);
       gl.vertexAttribPointer(programInfo.attribute.vertexPosition, numComponents, type, normalize, stride, offset);
       gl.enableVertexAttribArray(programInfo.attribute.vertexPosition);
+    }
+
+    { // Указываем WebGL как извлекать нормали из буфера нормалей в атрибут vertexNormal.
+      const numComponents = 3;
+      const type = gl.FLOAT;
+      const normalize = false;
+      const stride = 0;
+      const offset = 0;
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normals.buffer);
+      gl.vertexAttribPointer(programInfo.attribute.vertexNormal, numComponents, type, normalize, stride, offset);
+      gl.enableVertexAttribArray(programInfo.attribute.vertexNormal);
     }
 
     { // Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
@@ -253,6 +242,8 @@ function calculateDeformation(points, deformation) {
     // Set the shader uniforms
     gl.uniformMatrix4fv(programInfo.uniform.projectionMatrix, false, projectionMatrix.data);
     gl.uniformMatrix4fv(programInfo.uniform.modelViewMatrix, false, modelViewMatrix.data);
+    gl.uniformMatrix4fv(programInfo.uniform.normalMatrix, false, normalMatrix.data);//!
+    gl.uniform3fv(programInfo.uniform.lightPosition, light.data);
 
     {
       const vertexCount = buffers.indices.length;
@@ -266,8 +257,8 @@ function calculateDeformation(points, deformation) {
 
 /** */
   function initShaderProgram(gl, vsSource, fsSource) {
-    const vertexShader   = loadShader(gl, gl.VERTEX_SHADER, vsSource);
-    const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    const vertexShader   = loadShader(gl, 'VERTEX',  gl.VERTEX_SHADER, vsSource);
+    const fragmentShader = loadShader(gl, 'FRAGMENT', gl.FRAGMENT_SHADER, fsSource);
 
     const program = gl.createProgram();
     gl.attachShader(program, vertexShader);
@@ -275,19 +266,18 @@ function calculateDeformation(points, deformation) {
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      // alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(program));
       return null;
     }
     return program;
   }
 
 /** */
-  function loadShader(gl, type, source) {
+  function loadShader(gl, name, type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      // alert('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+      console.error(name, gl.getShaderInfoLog(shader));
       gl.deleteShader(shader);
       return null;
     }

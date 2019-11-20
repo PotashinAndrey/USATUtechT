@@ -1,0 +1,11 @@
+{
+  "files.exclude": {
+    "**/.history": true
+  },
+  "files.watcherExclude": {
+    "**/.history": true
+  },
+  "search.exclude": {
+    "**/.history": true
+  }
+}

@@ -15,13 +15,13 @@ void main(void) {
   gl_PointSize = 5.0;
 
   // Применяем эффект освещения
-  highp vec3 ambientLight = vec3(0.9, 0.9, 0.9); // uLightPosition; // vec3(0.7, 2, 0.5);
+  highp vec3 ambientLight = vec3(0.3, 0.3, 0.3); // uLightPosition; // vec3(0.7, 2, 0.5);
   highp vec3 directionalLightColor = vec3(1.0, 1.0, 1.0);
   highp vec3 directionalVector = normalize(vec3(0, 0, -10));
 
   highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
   highp float directional = dot(transformedNormal.xyz, directionalVector);
 
-  vLighting = directionalLightColor * directional; // + ambientLight
+  vLighting = directionalLightColor * directional + ambientLight;
   vColor = aVertexColor;
 }

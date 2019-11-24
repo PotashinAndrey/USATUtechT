@@ -3,14 +3,12 @@ import {Vector, Quatern, Matrix} from '/javascript-algebra/index.js';
 let canvas = document.getElementById("canvas");
 // const gl = canvas.getContext('webgl2');
 
-canvas.addEventListener('mousedown', e => {
-});
-
 function func(x, y) {
   return Math.pow(x, 3) - 3*x*Math.pow(y, 2);
 }
 
 let pointXY0 = [];
+// let pointRangeSize ={xStart: -2, xEnd: 3, yStart: -3, yEnd: 2};
 let pointRangeSize ={xStart: -14, xEnd: 15, yStart: -15, yEnd: 14};
 for (let i = pointRangeSize.xStart ; i < pointRangeSize.xEnd; i++) {
   for (let j = pointRangeSize.yStart; j < pointRangeSize.yEnd; j++) {
@@ -48,12 +46,32 @@ async function main(canvas, width, height) {
       // lightPosition: gl.getUniformLocation(program, 'uLightPosition')
     }
   };
+  let mouseFlag = false;
+
+  canvas.addEventListener('mousemove', e => {
+    if (mouseFlag) {
+      cubeRotation.x += (e.offsetY - canvas.height/2)/30000;
+      cubeRotation.y += (e.offsetX - canvas.width/2)/50000;
+    }
+    })
+
+  canvas.addEventListener('mousedown', () => {
+    mouseFlag = true;
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    mouseFlag = false;
+  });
 
   const buffers = await initBuffers(gl);
 
-  let cubeRotation = 0;
+  let cubeRotation = {
+    x: 0,
+    y: 0
+  };
+
   function render(time) {
-    cubeRotation = time / 5000;
+    // cubeRotation = time / 5000;
     drawScene(gl, programInfo, buffers, cubeRotation);
     requestAnimationFrame(render);
   }
@@ -105,54 +123,71 @@ function initBuffers(gl) {
   const indexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
+  // const indices = [];
+  let PointToNormales = [];
 
-  const indices = [];
-  const PointToNormales = [];
+  const W = Math.abs(pointRangeSize.xStart-pointRangeSize.xEnd);
+  const H = Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd);
+  const indices = createIndices(W, H);
 
+  PointToNormales = Array.from({length: indices.length}, (_, i) => (pointXY[indices[i]]));
+  console.log(indices);
+  console.log(PointToNormales);
+  // indices[0] = 1;
+  // const indices = initializeGrid(W, H);
+  // const indices = getIndices(W, H);
+  // for (let i = 0; i < W - 1; i++) {
+  //   // if (i > 0) indices.push(i * W);
+  //   for (let j = 0; j < H; j++) {
+  //     // if (i < W -1 && j < H - 1 ) {
+  //       // indices.push(i * H + j);
+  //       // indices.push(i * H + j + H);
+  //       // indices.push(i * H + j + 1);
+  //       // indices.push(i * H + j + 1);
+  //       // indices.push(i * H + j + H + 1);
+  //       // indices.push(i * H + j + H);
 
-  // for (let i = 0; i < pointXY; i++) {
-  //       indices.push(i);
-  //       indices.push(i + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd));
-  //       indices.push(i + 1);
-        // indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + 1);
-        // indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd));
-        // indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd));
-        // indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + 1);
-        // indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + 1);
+  //       // PointToNormales.push(pointXY[i * H + j]);
+  //       // PointToNormales.push(pointXY[i * H + j + H]);
+  //       // PointToNormales.push(pointXY[i * H + j + 1]);
+  //       // PointToNormales.push(pointXY[i * H + j + 1]);
+  //       // PointToNormales.push(pointXY[i * H + j + H + 1]);
+  //       // PointToNormales.push(pointXY[i * H + j + H]);
 
+  //       indices.push(i * W + j);
+  //       // indices.push(i * H + j + 1);
+  //       indices.push((i + 1) * W + j);
+  //       // indices.push(i * H + j + 1);
+  //       // indices.push(i * H + j + H + 1);
+  //       // indices.push(i * H + j + 1);
 
+  //       if (i < W - 2) indices.push((i + 1) * W + j);
 
-        // PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j]);
-        // PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd)]);
-        // PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + 1]);
+  //       // PointToNormales.push(pointXY[i * H + j]);
+  //       // PointToNormales.push(pointXY[i * H + j + 1]);
+  //       // PointToNormales.push(pointXY[i * H + j + H]);
+  //       // PointToNormales.push(pointXY[i * H + j + 1]);
+  //       // PointToNormales.push(pointXY [i * H + j + H + 1]);
+  //       // PointToNormales.push(pointXY[i * H + j + 1]);
+  //     // } else {
+  //     //   if (j < H - 1) { // правый край
+
+  //     //   }
+  //     //   if (i < W - 1) {
+  //     //     indices.push(i * H + j + H);
+  //     //     indices.push(i * H + j + H);
+  //     //     indices.push(i * H + j + H);
+  //     //   }
+  //     // }
+  //     // }
+  //   }
   // }
 
-
-  for (let i = 0; i < Math.abs(pointRangeSize.xStart-pointRangeSize.xEnd); i++) {
-    for (let j = 0; j < Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd); j++) {
-      if (i < Math.abs(pointRangeSize.xStart-pointRangeSize.xEnd) - 1 && j < Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) - 1) {
-        indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j);
-        indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd));
-        indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + 1);
-        indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + 1);
-        indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + 1);
-        indices.push(i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd));
-
-
-        PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j]);
-        PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd)]);
-        PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + 1]);
-        PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd)]);
-        PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + 1]);
-        PointToNormales.push(pointXY[i*Math.abs(pointRangeSize.yStart-pointRangeSize.yEnd) + j + 1]);
-      }
-    }
-  }
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
 
   const normales = [];
-  for (let i = 0; i < PointToNormales.length; i+=3) {
+  for (let i = 0; i < PointToNormales.length-2; i+=3) {
     // const n = Vector.normal(new Vector(PointToNormales[i]),new Vector(PointToNormales[i+1]),new Vector(PointToNormales[i+2])).data;
     // normales.push(...n, ...n, ...n);
 
@@ -166,23 +201,23 @@ function initBuffers(gl) {
 
     // if (i % 2 === 0) b = b.reverse();
 
-    let A = Vector.normal(b, a, c);
-    let B = Vector.normal(c, b, a);
-    let C = Vector.normal(a, c, b);
-
-    // if (i % 2 === 0) {
+    // if (i % 1 === 0) {
     //   a = a.inverse();
     //   b = b.inverse();
     //   c = c.inverse();
     // }
 
+    let A = Vector.normal(b, a, c);
+    let B = Vector.normal(c, b, a);
+    let C = Vector.normal(a, c, b);
+
     normales.push(...A.data);
     normales.push(...B.data);
     normales.push(...C.data);
 
-    console.log(A.toString());
-    console.log(B.toString());
-    console.log(C.toString());
+    // console.log(A.toString());
+    // console.log(B.toString());
+    // console.log(C.toString());
 
   }
 
@@ -210,6 +245,7 @@ function drawScene(gl, programInfo, buffers, cubeRotation/*, light*/) {
   gl.depthFunc(gl.LEQUAL);
   // gl.enable(gl.CULL_FACE);
   // gl.cullFace(gl.FRONT);
+  gl.frontFace(gl.CW);
 
   // eslint-disable-next-line no-bitwise
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -228,9 +264,10 @@ function drawScene(gl, programInfo, buffers, cubeRotation/*, light*/) {
     // .rotateY(flagy ? cubeRotation : 0) // amount to rotate not in radians
     // .rotateX(flagx ? cubeRotation : 0)
     // .rotateZ(flagz ? cubeRotation : 0);
-    .rotateX(0) // -0.75
+    .rotateX(cubeRotation.x) // -0.75
     .rotateZ(0) // -0.3
-    .rotateY(cubeRotation); //cubeRotation
+    .rotateY(cubeRotation.y);
+    // .rotateY(0.57);
 
   // console.log('model', modelViewMatrix.toString(2));
   const normalMatrix = modelViewMatrix.inverse3D().transpose();
@@ -302,8 +339,8 @@ function drawScene(gl, programInfo, buffers, cubeRotation/*, light*/) {
     const vertexCount = buffers.indices.length;
     const type = gl.UNSIGNED_SHORT;
     const offset = 0;
-    if (true) gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
-    // if (true) gl.drawElements(gl.TRIANGLE_STRIP, vertexCount, type, offset);
+    // if (true) gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
+    if (true) gl.drawElements(gl.TRIANGLE_STRIP, vertexCount, type, offset);
     // if (true) gl.drawElements(gl.TRIANGLE_FAN, vertexCount, type, offset);
     // if (true) gl.drawElements(gl.LINES, vertexCount, type, offset);
     // if (true) gl.drawElements(gl.POINTS, vertexCount, type, offset);
@@ -314,4 +351,93 @@ function drawScene(gl, programInfo, buffers, cubeRotation/*, light*/) {
 // gl.clear(gl.COLOR_BUFFER_BIT);
 
 
+function createIndices(width, height, out) {
+  var size = height + (height - 1) * ((width - 2) << 1);
+  var w_minus_one = width - 1;
+  var base = (width - 2) << 1;
+  var max = width * height;
+  var shiftRight = 0;
+  var idx = 1;
+  var l0 = -width;
+  var l1 = 0;
+  var x = 1;
+  var y = 0;
+  var i = 0;
+  out = out ?
+    out.subarray(0, size) :
+    new (max > 0xFFFF ? Uint32Array : Uint16Array)(size);
+
+  out[0] = 1;
+  for (; y < height - 1; ++y) {
+    l0 = l1;
+    l1 = l0 + width;
+    i = idx;
+    idx += 1 + ((width - 2) << 1);
+    if (y & 1) {
+      out[i + base] = 1 + l1;
+      for(; x > 1; --x, i += 2) {
+        out[i] = x - 1 + l0;
+        out[i + 1] = x + l1;
+      }
+    } else {
+      out[i + base] = w_minus_one + l1;
+      for(; x < w_minus_one; ++x, i += 2) {
+        out[i] = x + 1 + l0;
+        out[i + 1] = x + l1;
+      }
+    }
+  }
+  return out;
+}
+
+function initializeGrid(cols,rows)
+{
+    var RCvertices=2*cols*(rows-1);
+    var TSvertices=2*cols*(rows-1)+2*(rows-2);
+    // let numVertices=TSvertices;
+    var j=0;
+    const trianglestrip = new Array(TSvertices - 1)
+    for(var i = 1; i <= RCvertices; i += 2)
+    {
+        trianglestrip[ j ] = (1 +i)/2;
+        trianglestrip[ j +1 ] = (cols*2 + i + 1) / 2;
+        if( trianglestrip[ j +1 ] % cols == 0)
+        {
+            if( trianglestrip[ j +1 ] != cols && trianglestrip[ j +1 ] != cols*rows )
+            {
+                trianglestrip[ j +2 ] = trianglestrip[ j +1 ];
+                trianglestrip[ j +3 ] = (1 + i + 2) / 2;
+                j += 2;
+            }
+        }
+        j += 2;
+    }
+    return trianglestrip;
+}
+
+function getIndices(width, height) {
+  // if ( indices ) return indices;
+
+  const indices = []; // new int[ iSize];
+  var i = 0;
+
+  for (let row = 0; row < height - 1; row++) {
+    if ((row & 1) === 0) { // even rows
+      for (let col = 0; col < width; col++) {
+        indices.push(col + row * width);
+        indices.push(col + (row + 1) * width);
+      }
+    } else { // odd rows
+      for (let col = width - 1; col > 0; col--) {
+        indices.push(col + (row + 1) * width);
+        indices.push(col - 1 + row * width); // !
+      }
+    }
+  }
+  // if ((mHeight & 1) && mHeight > 2) {
+  //   mpIndices[i++] = (mHeight-1) * mWidth;
+  // }
+
+  return indices;
+}
 

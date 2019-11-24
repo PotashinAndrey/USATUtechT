@@ -8,11 +8,11 @@
       "type": "node",
       "request": "launch",
       "name": "debug program",
-      "program": "${workspaceFolder}/source/index.js",
+      "program": "${workspaceFolder}/index.js",
       "runtimeExecutable": "node",
       "runtimeArgs": ["--experimental-modules", "--experimental-json-modules"],
       "restart": true,
-      "cwd": "${workspaceFolder}/source"
+      "cwd": "${workspaceFolder}"
     }
   ]
 }

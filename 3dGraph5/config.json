@@ -1,0 +1,18 @@
+{
+  "server": {
+    "port": 4000,
+    "limit": "50mb",
+
+    "static": {
+      "root": "./source/client",
+      "modules": [
+        {"route": "/model",              "root": "./source/model"},
+        {"route": "/static",             "root": "./source/static"},
+        {"route": "/material",           "root": "./node_modules/web-material/"},
+        {"route": "/javascript-std-lib", "root": "./node_modules/javascript-std-lib/"},
+        {"route": "/javascript-algebra", "root": "./node_modules/javascript-algebra/"},
+        {"route": "/javascript-canvas",  "root": "./node_modules/javascript-canvas/"}
+      ]
+    }
+  }
+}

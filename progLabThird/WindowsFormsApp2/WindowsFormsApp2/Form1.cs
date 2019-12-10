@@ -13,9 +13,39 @@ namespace WindowsFormsApp2
 
     public partial class Form1 : Form
     {
+        
+        public class Controller : IController
+        {
+            public IModel Model { get => model; set => this.model = value; }
+            List<IView> views = new List<IView>();
+            IModel model;
+
+            static Random r = new Random();
+
+            public void Add()
+            {
+                model.AddNode(r.Next(100));
+            }
+
+            public void AddView(IView v)
+            {
+                views.Add(v);
+            }
+
+            public void Remove()
+            {
+
+                model.RemoveLastNode();
+            }
+
+        }
+
         public Form1()
         {
             InitializeComponent();
+            IView labView;
+            labView = new LabelView(label1);
+            AddView(labView);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -23,34 +53,19 @@ namespace WindowsFormsApp2
 
         }
 
-        
-    }
-
-    public class Controller : IController
-    {
-        public IModel Model { get => model; set => this.model = value; }
-        List<IView> views = new List<IView>();
-        IModel model;
-
-        static Random r = new Random();
-
-        public void Add()   
+        private void Button1_Click(object sender, EventArgs e)
         {
-            model.AddNode(r.Next(100));
+            Add();
         }
 
-        public void AddView(IView v)
+        private void Button2_Click(object sender, EventArgs e)  
         {
-            views.Add(v);
-        }
 
-        public void Remove()
-        {
-            
-            model.RemoveLastNode();
         }
 
     }
+
+
 }
 
 

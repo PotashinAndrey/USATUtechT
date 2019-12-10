@@ -15,7 +15,6 @@ draw(vectors);
 /** */
 function draw(vectors) {
   drawFigure(points, vectors);
-  // vectors.length = 0;
 }
 
 /** */
@@ -73,7 +72,6 @@ function calculateDeformation(points, deformation) {
     let cubeRotation = 0;
     let negative = 1;
     let speed = 0.0001;
-    // drawScene(gl, programInfo, buffers, cubeRotation);
 
     const light = Vector.from(0, 0, 0);
 
@@ -86,30 +84,25 @@ function calculateDeformation(points, deformation) {
     /** */
       function render(now = 0) {
         if (flag) {
-          // setTimeout(() => {
             cubeRotation += negative * speed * 10;
             drawScene(gl, programInfo, buffers, cubeRotation, light);
             requestAnimationFrame(render);
-          // }, 1000 / 20)
         }
       }
 
     $('#point').addEventListener('click', () => {
       flagP = !flagP
       if (!flagP && !flagE && !flagL ) flagL = !flagL;
-      // drawScene(gl, programInfo, buffers, cubeRotation);
       render();
     });
     $('#line').addEventListener('click', () => {
       flagL = !flagL
       if (!flagP && !flagE && !flagL ) flagL = !flagL;
-      // drawScene(gl, programInfo, buffers, cubeRotation);
       render();
     });
     $('#edge').addEventListener('click', () => {
       flagE = !flagE
       if (!flagP && !flagE && !flagL ) flagL = !flagL;
-      // drawScene(gl, programInfo, buffers, cubeRotation);
       render();
     });
 

@@ -26,8 +26,8 @@ namespace WindowsFormsApp2
 
         public void UpdateView()
         {
-            throw new NotImplementedException();
-        }   
+            l.Text = Model.Count.ToString();
+        }
 
 
     }

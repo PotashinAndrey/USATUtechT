@@ -2,7 +2,7 @@ import {$} from './script.js';
 import {Vector, Matrix} from '/javascript-algebra/index.js';
 
 const oneStep = Math.PI / 32;
-let flagx = false, flagy = true, flagz = false, flagP = true, flagL = true, flagE = false;
+let flagx = false, flagy = true, flagz = false, flagP = false, flagL = false, flagE = true;
 
 const points = [[0,1.5,0],[1,1.5,0],[1,1.3,0],[0.6,1.1,0],[0.7,1,0],[0.7,0.9,0],[0.6,0.8,0],[0.4,-1,0],[0.6, -1.1,0],[0.6, -1.2,0],[0.55, -1.3,0],[0.6, -1.4,0],[0.6, -1.5,0],[0.5, -1.7,0],[0.4, -1.8,0],[0.2, -1.9,0],[0, -2,0],[0,1.5,0]];
 const vectors = [];
@@ -71,7 +71,7 @@ function calculateDeformation(points, deformation) {
     };
 
     const buffers = await initBuffers(gl);
-    let crateImage = initTexture();
+    let crateImage = await initTexture(gl);
 
     let cubeRotation = 0;
     let negative = 1;
@@ -90,7 +90,7 @@ function calculateDeformation(points, deformation) {
         if (flag) {
           // setTimeout(() => {
             cubeRotation += negative * speed * 10;
-            drawScene(gl, programInfo, buffers, cubeRotation, light);
+            drawScene(gl, programInfo, buffers, cubeRotation, light, crateImage);
             requestAnimationFrame(render);
           // }, 1000 / 20)
         }
@@ -167,13 +167,15 @@ function calculateDeformation(points, deformation) {
 
     const textureBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+
+
     const textureCoords = [];
     for (let i = 0; i < 64 * 18 - 1; i++) {
       textureCoords.push(
             0.0, 0.0,
-            1.0, 0.0,
-            1.0, 1.0,
-            0.0, 1.0)
+            0.01, 0.0,
+            0.01, 0.01,
+            0.0, 0.01)
     }
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
@@ -191,7 +193,7 @@ function calculateDeformation(points, deformation) {
   }
 
 /** */
-  function drawScene(gl, programInfo, buffers, cubeRotation, light) {
+  function drawScene(gl, programInfo, buffers, cubeRotation, light, crateImage) {
     gl.clearColor(0.9, 0.9, 0.9, 1.0);
     gl.clearDepth(1.0);
     gl.enable(gl.DEPTH_TEST);
@@ -256,7 +258,7 @@ function calculateDeformation(points, deformation) {
       gl.enableVertexAttribArray(programInfo.attribute.vertexTextre);
 
       gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, crateTextures[filter]);
+      gl.bindTexture(gl.TEXTURE_2D, crateImage);
       gl.uniform1i(programInfo.uniform.samplerUniform, 0);
     }
 
@@ -314,23 +316,21 @@ function calculateDeformation(points, deformation) {
     return shader;
   }
 
-  function handleLoadedTexture(texture, gl) {
+  function handleLoadedTexture(crateImage, gl) {
+    let texture = gl.createTexture();
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    texture.image = crateImage;
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    return texture;
 }
 
 function initTexture(gl) {
-  let crateImage = new Image();
-  let texture = gl.createTexture();
-  texture.image = crateImage;
-
-  crateImage.onload = function () {
-  handleLoadedTexture(texture, gl)
-  }
-  crateImage.src = "wood24.jpg";
-
-  return crateImage;
+  return new Promise((resolve, reject) => {
+    let crateImage = new Image();
+    crateImage.onload = () => resolve(handleLoadedTexture(crateImage, gl));
+    crateImage.src = "wood24.jpg";
+  });
 }

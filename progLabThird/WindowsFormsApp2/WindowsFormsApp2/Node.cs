@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp2
 {
-    class Node
+    public class Node
     {
         private int value;
         private int x;
         private int y;
+
+        public int X { get { return x; } }
+        public int Y { get { return y; } }
+        public int Value { get { return value; } }
 
         public Node(int value, int x, int y)
         {

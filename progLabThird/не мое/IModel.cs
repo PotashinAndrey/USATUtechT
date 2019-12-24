@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp2
+namespace prog_lab3
 {
-    public interface IModel
+      interface IModel
     {
+
+        event Action Changed;
         void AddNode(int value);
         void RemoveLastNode();
+
         IEnumerable<Node> AllNodes { get; }
         int Count { get; }
     }

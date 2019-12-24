@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp2
+namespace prog_lab3
 {
-    public interface IController
+     interface IController
     {
         IModel Model { get; set; }
         void AddView(IView v);
         void Add();
         void Remove();
-        void UpdateThenLoaded();
     }
 }

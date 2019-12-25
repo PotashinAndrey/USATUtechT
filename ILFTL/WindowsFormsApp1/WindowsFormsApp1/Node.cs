@@ -4,23 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp2
+namespace WindowsFormsApp1
 {
     public class Node
     {
-        private int value;
-        private int x;
-        private int y;
-
-        public int X { get { return x; } }
-        public int Y { get { return y; } }
-        public int Value { get { return value; } }
-
+        int x, y, value;
         public Node(int value, int x, int y)
         {
             this.x = x;
             this.y = y;
             this.value = value;
         }
+
+        public int X { get => x; }
+        public int Y { get => y; }
     }
 }

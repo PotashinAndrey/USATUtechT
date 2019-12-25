@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp2
+namespace WindowsFormsApp1
 {
-    class PanelView : Panel, IView
+    public class PanelView : Panel, IView
     {
-
         public IModel Model { get; set; }
 
         public void UpdateView()
@@ -28,5 +27,6 @@ namespace WindowsFormsApp2
                 g.DrawEllipse(Pens.Red, n.X * 20, n.Y * 20, 20, 20);
             }
         }
+
     }
 }

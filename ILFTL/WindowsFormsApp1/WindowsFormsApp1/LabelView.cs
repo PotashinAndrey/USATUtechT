@@ -5,29 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp2
+namespace WindowsFormsApp1
 {
-    class LabelView : IView
+   public class LabelView : IView
     {
         Label l;
-        IModel model = new MyModel();
+        IModel model;
+        public IModel Model { get => model; set => model = value; }
 
         public LabelView(Label l)
         {
             this.l = l;
         }
 
-        public IModel Model { get => this.model; set => this.model = value; }
-
-        public void SetModel(IModel model) {
-            this.model = model;
-        }
-
         public void UpdateView()
         {
             l.Text = Model.Count.ToString();
         }
-
-
     }
 }

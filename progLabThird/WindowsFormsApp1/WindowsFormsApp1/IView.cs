@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WindowsFormsApp2
+namespace WindowsFormsApp1
 {
     public interface IView
     {
         IModel Model { get; set; }
         void UpdateView();
+
     }
 }

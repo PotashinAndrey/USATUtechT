@@ -19,15 +19,15 @@ namespace prog_lab3
         {
             if (Changed != null) Changed();
             nodes.AddFirst(new Node(value, r.Next(10), r.Next(10)));
-            
+
         }
-        
+
 
         public void RemoveLastNode()
         {
             if (Changed != null) Changed();
             if (nodes.Count >0)nodes.RemoveLast();
-            
+
         }
     }
 }

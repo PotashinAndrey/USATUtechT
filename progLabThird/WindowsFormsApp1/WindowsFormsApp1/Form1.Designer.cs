@@ -72,6 +72,8 @@
             this.panelView1.Name = "panelView1";
             this.panelView1.Size = new System.Drawing.Size(396, 361);
             this.panelView1.TabIndex = 3;
+            this.panelView1.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelView1_Paint);
+            this.panelView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PanelView1_MouseClick);
             // 
             // dataGridView1
             // 
